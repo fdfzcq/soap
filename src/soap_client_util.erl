@@ -260,7 +260,7 @@ parse_xml(Message, Model, Http_status, Http_headers,
                          #p_state{model = Model, version = Version,
                                   soap_ns = Ns, state = start,
                                   handler = Handler},
-                         fun xml_parser_cb_wrapped/2, []) of
+                         fun xml_parser_cb_wrapped/2, erlsom_options()) of
         {ok, #p_state{is_fault = true,
                       soap_headers = Decoded_headers,
                       soap_body = Decoded_fault,
@@ -475,3 +475,9 @@ default_header_parser(_Namespace) ->
     %% returns 'undefined' when the parsing is doen. 'undefined' is treated as 
     %% a special value (see above), which will not be included in the result.
     {ok, soap_parsers:skip(undefined)}.
+
+erlsom_options() ->
+  erlsom_options(application:get_env(soap, erlsom_sax_parser_options)).
+
+erlsom_options(undefined) -> [];
+erlsom_options(Options) -> Options.
